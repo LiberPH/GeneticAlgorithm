@@ -1,5 +1,10 @@
 #!/usr/bin/env Rscript
 
+###########
+#File for changing the randomly chosen parameter (in this case one of the seven parameters to change in the bngl file)
+#The first number in the runif indicates how many numbers, the second the minimal number from the interval to choose 
+#random numbers and the third the maximun number of the interval.
+###########
 # ...
 
 argv <- commandArgs(T);
