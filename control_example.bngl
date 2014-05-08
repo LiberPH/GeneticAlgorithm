@@ -1,0 +1,53 @@
+# Retroactivity model made in the Basic BNGL Model 
+
+#Original Dynamics
+
+begin model
+
+begin parameters
+	log_2 log(2)
+	tau 10 #Yeast duplication time
+	k_degr log_2/tau #degradation rate according to Ajo-Franco et al log(2)/tau
+	s 0.26
+	beta 5
+	K 30
+	n 3.4
+	#alpha 20 #???
+end parameters
+
+begin molecule types
+	#Isolated
+	As(b) #Signaling component it has one DNA binding site l
+	Aa(b) #Autoactivator it has also one DNA binding site to its own promoter
+	AaP()  #Autoactivator promoter has 8 potential sites to be bound by TF. A single binding can change the whole promoter to an active transcription form
+	Null()
+end molecule types
+
+begin seed species
+	#Isolated
+	As(b) 0
+	Aa(b) 0
+	AaP() 1
+	$Null() 1
+end  seed species
+
+begin observables
+	Molecules Aa Aa(b)
+	Molecules As As(b)
+end observables
+
+begin reaction rules
+	AaP() -> AaP() + Aa(b) s
+	AaP() -> AaP() + Aa(b) beta*(Aa+As)^n/(K^n+(Aa+As)^n)
+	Aa(b) -> Null k_degr
+	#
+	#Null -> As(b)	alpha
+	As(b) -> Null k_degr 
+end reaction rules
+end model
+
+#ACTIONS
+
+generate_network({overwrite=>1});
+simulate_ode({t_end=>1440,n_steps=>1440,verbose=>1});
+#simulate_ssa({t_end=>1080,n_steps=>1080});
