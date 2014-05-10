@@ -24,7 +24,7 @@ x5 <- runif(1, 60, 60000)
 x6 <- runif(1, 0, 20)
 x7 <- runif(1, 0, 1)
 
-out <- c(x1,x2,x3,x4,x5,x6,x7)
+out <- c(x1,x2,x3,x4,x5,x6,x7) #Returns all the needed parameters
 
 cat(out)
 sink()
