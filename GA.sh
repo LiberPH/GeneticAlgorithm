@@ -32,9 +32,8 @@ declare -a TARGET_ARRAY         # used for our fitness function
 declare -a CANDIDATE_ARRAY      # used for our fitness function
 declare -a FITNESS              # matches the CANDIDATE_ARRAY, the fitness value of each member
 
-echo "Pool Size: $POOL_SIZE          Repro Rate: $REPRO_CHANCE     Mutate Rate: $MUTATION_RATE"
-echo "Return Rate: $RETURN_CHANCE       Best Fits: $BEST_FITS       Num Mutations: $NUM_MUTATIONS"
-echo "Churn Rate: $CHURN_RATE/$POOL_SIZE       Run for $MAX_GENERATIONS generations"
+echo "Pool Size: $POOL_SIZE      Best Fits: $BEST_FITS       Num Mutations: $NUM_MUTATIONS"
+echo "Run for $MAX_GENERATIONS generations"
 #####################################################################################
 #####################################################################################
      # useful scratch variables, I am including them here for reference only...          #
