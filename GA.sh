@@ -94,15 +94,15 @@ prepare_candidate()
 
 run_candidate()
 {
-	cp $1 candidate.bngl
-	$RUNBNGL $1
+	cp $1 candidate.bngl #copy file to candidate.bngl
+	$RUNBNGL $1 #Run bngl simulation of candidate
 	#echo "I just ran the candidate"
   } 
 
 objetive_fun()
 {
 	CANDIDATE_GDAT=$1
-	Rscript $RUNR2 control.gdat $CANDIDATE_GDAT
+	Rscript $RUNR2 control.gdat $CANDIDATE_GDAT #Compare control vs candidate simulations by canberra distance
 	#echo "I calculated objective function"
 }
 
