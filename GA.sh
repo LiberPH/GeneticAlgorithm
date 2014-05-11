@@ -16,24 +16,16 @@ ORIGDG=control.bngl
      # constants                                                                         #
      #####################################################################################
 GENERATION=0           # our current generation, how long the simulation has been running
-POOL_SIZE=${4:-20}      # how many candidates are alive at once
-REPRO_CHANCE=${5:-30}  # in a generation, the chance (0 to 100) that a candidate will choose a mate
+POOL_SIZE=${4:-20}      # how many candidates are alive at once (in this case 20)
 MUTATION_RATE=${7:-75} # for each birth, the chance (0 to 100) that a mutation will occur
 NUM_MUTATIONS=${8:-1}  # max number of mutations to apply to a single child
 MAX_GENERATIONS=2000
 
 
 BEST_VAL=0   #Ya que vamos a minimizar una diferencia, el mejor valor para mí es 0 (generalizar)
-BEST_MATCH=""
 
-
-#TARGET_STRING="Hello, World!"   # determine our target string
-#LENGTH=${#TARGET_STRING}        # get the length of the target string
 TARGET_PARAMETERS_NUMBER=${8:-7}   #Number of target parameters to get (number of genes in chromosome)
-#TARGET_PARAMETERS_NAMES=(k_act k_inact s kr ka TR_Aa) #Parámetros a evaluar
-#TARGET_PARAMETERS_INITIAL=(3600*60 18*60 0.1 0.001387508 0.000265988 14.4*10) #Valores iniciales de los parámetros a evaluar
 
-#printf -- '%s\n' "${TARGET_PARAMETERS_INITIAL[@]}"
 
 declare -a CANDIDATES           # our candidate population
 declare -a TARGET_ARRAY         # used for our fitness function
@@ -54,12 +46,12 @@ POPULATION_SCORE=0 # used to show how close the population as a whole is getting
 # HELPER SCRIPTS                                                                     #
 ##########################################################################################
 
-RUNR1=/home/rvv/LPH/GA_exploration/MM/generate_candidates_MM_As_0_end_Carlitos_A.R #Generates one 
+RUNR1=/home/rvv/LPH/GA_exploration/MM/generate_candidates_MM_As_0_end_Carlitos_A.R #Generates one candidate
 RUNBNGL="perl /home/rvv/LPH/RuleBender/BioNetGen-2.2.0/BNG2.pl"
-RUNR2=/home/rvv/LPH/GA_exploration/MM/canberra.R
-RUNR3=/home/rvv/LPH/GA_exploration/MM/max_min.R
-RUNR4=/home/rvv/LPH/GA_exploration/MM/CHANGE_PARAM_MM_As_0_end_Carlitos_A.R
-RUNR5=/home/rvv/LPH/GA_exploration/MM/recombine_blended.R
+RUNR2=/home/rvv/LPH/GA_exploration/MM/canberra.R #Calculates canberra's distance
+RUNR3=/home/rvv/LPH/GA_exploration/MM/max_min.R 
+RUNR4=/home/rvv/LPH/GA_exploration/MM/CHANGE_PARAM_MM_As_0_end_Carlitos_A.R #Generates a parameter to change it for the current (i.e. mutation)
+RUNR5=/home/rvv/LPH/GA_exploration/MM/recombine_blended.R #Recombinates two of the current candidates
 
 ##########################################################################################
 # helper functions and calls                                                                      #
