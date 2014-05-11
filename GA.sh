@@ -108,11 +108,12 @@ objetive_fun()
 recombine()
 {
 a=$1
-RNDM_GUY1=`echo $[ $[ RANDOM % ($POOL_SIZE-14) ]]`
-RNDM_GUY2=`echo $[ $[ RANDOM % ($POOL_SIZE-14) ]]`
+RNDM_GUY1=`echo $[ $[ RANDOM % ($POOL_SIZE-14) ]]` #Select one from the six best sons to recombine
+RNDM_GUY2=`echo $[ $[ RANDOM % ($POOL_SIZE-14) ]]` #Select one from the six best sons to recombine
 
 
-while [ "$RNDM_GUY1" -eq "$RNDM_GUY2" ]; do
+
+while [ "$RNDM_GUY1" -eq "$RNDM_GUY2" ]; do #In case you chose twice the same child...
 RNDM_GUY2=`echo $[ $[ RANDOM % ($POOL_SIZE-12) ]]`
 done
 
@@ -124,8 +125,7 @@ printf "${CANDIDATES[${ORDER[$RNDM_GUY1]}]}\n${CANDIDATES[${ORDER[$RNDM_GUY2]}]}
 #	do
 ONE=`echo $[ 1 + $[ RANDOM % ($TARGET_PARAMETERS_NUMBER-1) ]]`
 TWO=`echo $[ 1 + $[ RANDOM % ($TARGET_PARAMETERS_NUMBER-1) ]]`
-#echo "Soy ONE $ONE "
-#echo "Soy TWO $TWO "
+
 while [ "$ONE" -eq 1 -a "$TWO" -eq "$TARGET_PARAMETERS_NUMBER" -o "$ONE" -eq "$TARGET_PARAMETERS_NUMBER" -a "$TWO" -eq 1 ];do
 TWO=`echo $[ 1 + $[ RANDOM % ($TARGET_PARAMETERS_NUMBER-1) ]]`
 done
