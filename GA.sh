@@ -117,9 +117,9 @@ while [ "$RNDM_GUY1" -eq "$RNDM_GUY2" ]; do #In case you chose twice the same ch
 RNDM_GUY2=`echo $[ $[ RANDOM % ($POOL_SIZE-12) ]]`
 done
 
-echo "Mi chico random 1 es $RNDM_GUY1 y sus valores son ${CANDIDATES[${ORDER[$RNDM_GUY1]}]}" >> random_guys.txt
-echo "Mi chico random 2 es $RNDM_GUY2 y sus valores son ${CANDIDATES[${ORDER[$RNDM_GUY2]}]}" >> random_guys.txt
-printf "${CANDIDATES[${ORDER[$RNDM_GUY1]}]}\n${CANDIDATES[${ORDER[$RNDM_GUY2]}]}" > recomb_us.txt
+echo "My random child 1 is $RNDM_GUY1 and its values are ${CANDIDATES[${ORDER[$RNDM_GUY1]}]}" >> random_guys.txt #Useful for debugging
+echo "My random child 2 is $RNDM_GUY2 y and its values are ${CANDIDATES[${ORDER[$RNDM_GUY2]}]}" >> random_guys.txt #Useful for debugging
+printf "${CANDIDATES[${ORDER[$RNDM_GUY1]}]}\n${CANDIDATES[${ORDER[$RNDM_GUY2]}]}" > recomb_us.txt #File with the gys to recombinate
 
 #for i in $(seq 1 $CHILDREN)
 #	do
@@ -131,18 +131,17 @@ TWO=`echo $[ 1 + $[ RANDOM % ($TARGET_PARAMETERS_NUMBER-1) ]]`
 done
 
 if [[ "$ONE" -le "$TWO" ]]; then
-RNDM_START=$ONE
-RNDM_END=$TWO
+RNDM_START=$ONE #Recombination start place in the child 1
+RNDM_END=$TWO #Recombination end place in the child 1
 else
-RNDM_START=$TWO
-RNDM_END=$ONE
+RNDM_START=$TWO #Recombination start place in the child 2
+RNDM_END=$ONE #Recombination end place in the child 2
 fi
 
-#echo -e "Soy el random start $RNDM_START "
-#echo -e "Soy el random end $RNDM_END "
+
 Rscript $RUNR5 $RNDM_START $RNDM_END "recomb_us.txt"
 NEW_GUY=`cat son.txt`
-echo "this is new guy by recombination $NEW_GUY" >>New_guys.txt
+echo "this is new guy by recombination $NEW_GUY" >>New_guys.txt #Here are the recombination rsults
 eval "$a=\$NEW_GUY"
 }
 
@@ -150,32 +149,32 @@ eval "$a=\$NEW_GUY"
 
 mutate()
 {
-	a=$1 #asignar nombre de la variable de nuevo hijo a "a"
+	a=$1 #assign the name of the new variable to "$a"
 	#insides=${!a}
-	RNDM_GUY=`echo $[ 3 + $[RANDOM % ($POOL_SIZE - 6) ]]` #No quiero que el mas chafa pueda mutar (muere) y no tiene sentido mutar a los mejores
-	RNDM_PARAM=`echo $[ 1 + $[ RANDOM % $TARGET_PARAMETERS_NUMBER ]]`
-	Rscript $RUNR4 $RNDM_PARAM	
+	RNDM_GUY=`echo $[ 3 + $[RANDOM % ($POOL_SIZE - 6) ]]` #The 6 worst have no chance to mutate
+RNDM_PARAM=`echo $[ 1 + $[ RANDOM % $TARGET_PARAMETERS_NUMBER ]]` #Any of the paraeters can be the one that mutates
+	Rscript $RUNR4 $RNDM_PARAM
 	NEW_PAR=`cat param.txt`
 	insides=${CANDIDATES[${ORDER[$RNDM_GUY]}]}
 	ARR=($insides)
 	let PAR=$RNDM_PARAM-1
 	ARR[$PAR]=$NEW_PAR
 	NEW_GUY=$( IFS=$' '; echo "${ARR[*]}" )	
-	#echo "El nuevo parametro $RNDM_PARAM  para el individuo es $NEW_PAR y esta guardado en ${ARR[$RNDM_PARAM]}}"
-	echo "Soy el nuevo por mutación $NEW_GUY" >> New_guys.txt
+	#echo "The new parameters $RNDM_PARAM  for the guy $NEW_PAR is saved in ${ARR[$RNDM_PARAM]}}"
+	echo "I'm the new guy by mutation $NEW_GUY" >> New_guys.txt
 	eval "$a=\$NEW_GUY" 	
 }
 
 display_prodigy()
 {
    printf ">>> Im in   Generation:      $GENERATIONS"
-   printf "   Prodigy: > ${CANDIDATES[${ORDER[0]}]} < with a score of ${OBJETIVE[${ORDER[0]}]}\n"
+printf "   Prodigy: > ${CANDIDATES[${ORDER[0]}]} < with a score of ${OBJETIVE[${ORDER[0]}]}\n" #Displaying best fit guy and its chromosome
 }
 
-check_guy(){
-	prepare_candidate $1 $DG
+check_guy(){ #
+prepare_candidate $1 $DG
 	run_candidate candidate.bngl >> MIU.TXT
-	echo "somos uno $1 dos $2 " >> params_check_guy.txt
+	echo "whe are one $1 and two $2 " >> params_check_guy.txt
 	cp candidate.gdat "candidate_$2.gdat"
 	objetive_fun candidate.gdat
 	OBJETIVE[$2]=`cat output.txt`
@@ -237,9 +236,9 @@ GENERATIONS=1
 
 while [ $GENERATIONS -le $MAX_GENERATIONS ];do
 	
-	NEW_GEN[0]=${CANDIDATES[${ORDER[0]}]} #save best fit
+	NEW_GEN[0]=${CANDIDATES[${ORDER[0]}]} #save the 7 best fit
 	NEW_GEN[1]=${CANDIDATES[${ORDER[1]}]}
-	NEW_GEN[2]=${CANDIDATES[${ORDER[2]}]} #save best fit
+	NEW_GEN[2]=${CANDIDATES[${ORDER[2]}]}
 	NEW_GEN[3]=${CANDIDATES[${ORDER[3]}]}
 	NEW_GEN[4]=${CANDIDATES[${ORDER[4]}]}
 	NEW_GEN[5]=${CANDIDATES[${ORDER[5]}]}
@@ -252,34 +251,35 @@ new_gen_index=8 #there are already four guys for the next generation
 for new_gen_index in $(seq 7 13)
 do
 recombine NEW_GEN[$new_gen_index]
-echo "Soy el nuevo candidato por recombinación ($new_gen_index)!! ${NEW_GEN[$new_gen_index]}" >> nuevos_cand
+echo "I am the new candidate by recombination ($new_gen_index)!! ${NEW_GEN[$new_gen_index]}" >> nuevos_cand #for further debugging, this can be commented for further economy
 done
 
 for new_gen_index in $(seq 14 $POOL)
 do
 generate_candidate > cosa
 NEW_GEN[$new_gen_index]=`cat cosa`
-echo "Soy el nuevo candidato de la nada($new_gen_index)!! ${NEW_GEN[$new_gen_index]}" >>nuevos_cand
+echo "I am the new candidate ($new_gen_index)!! ${NEW_GEN[$new_gen_index]}" >>nuevos_cand
 done
 
 #Mutate random guy that is not one of the four best fits
 
-for new_gen_index in $(seq 1 10)#Tasa de mutacion del 10% es aprox 10 cambios
+for new_gen_index in $(seq 1 10)#mutation rate is 10% aprox 10 changes
 
 do
 RNDM_GUY=`echo $[ 4 + $[RANDOM % ($POOL) ]]` #I don't want to change the 4 best ones
 mutate NEW_GEN[$RNDM_GUY] $RNDM_GUY
-echo "Soy el nuevo candidato mutado($RNDM_GUY)!! ${NEW_GEN[$RNDM_GUY]}" >> nuevos_cand
+echo "I am the new mutated candidate ($RNDM_GUY)!! ${NEW_GEN[$RNDM_GUY]}" >> nuevos_cand
 done
 
 
-echo "Todos mis candidatos ${NEW_GEN[*]}"	>> "all_new.txt"
+echo "All my candidates ${NEW_GEN[*]}"	>> "all_new.txt"
 
 CANDIDATES=( "${NEW_GEN[@]}" )
 
 echo "Todos mis candidatos en CANDIDATES ${CANDIDATES[*]}"	>> "candidates.txt"
 
-#Ahora reviso (saco el costo) de todos mis candidatos tras mutación y todo lo demás. Los cuatro primeros no deberían cambiar
+#Checking the cost of all candidates after mutations preserving the first four
+
 check_guy "${CANDIDATES[0]}" "0"
 check_guy "${CANDIDATES[1]}" "1"
 check_guy "${CANDIDATES[2]}" "2"
@@ -303,22 +303,17 @@ ORDER=($line) #Candidate order in array
 echo "Lo que tengo en ORDER ${ORDER[*]}" >>ORDER.txt
 
 
-cat all_diff.txt >> diferencias_todas.txt
-cat order.txt >> todos_ordenados.txt
+cat all_diff.txt >> diferencias_todas.txt #All the differences
+cat order.txt >> todos_ordenados.txt #All ordered
 
-#for i in $(seq 0 9)
-#	do
-#	#echo "Lo que tengo en NEW_GEN $i  ${NEW_GEN[$i]} generación $GENERATIONS" >> new_candidates.txt
-#	echo "Lo que tengo en CANDIDATES $i tras la asignación ${CANDIDATES[$i]} generación $GENERATIONS" >> new_candidates.txt
-#done
+
 
 for j in $(seq 0 $POOL)
 do
-#echo "Debería estar escribiendo en ordenamiento"
-echo "mi diferencia vale ${OBJETIVE[${ORDER[$j]}]} y Soy el cand ${ORDER[$j]} en orden de la generacion ($GENERATIONS) ${CANDIDATES[${ORDER[$j]}]} y  mi index sin ordenar es $j" >> ordenamiento.txt
+echo "My differenc is ${OBJETIVE[${ORDER[$j]}]} and I am the candidate ${ORDER[$j]} in oreder of the generation ($GENERATIONS) ${CANDIDATES[${ORDER[$j]}]} and my unordered index is $j" >> ordenamiento.txt # Every single candidate with its characteristics across all generations (probably the most valuable output)
 done
 
-display_prodigy >> "Results.txt"
-let GENERATIONS=$GENERATIONS+1
+display_prodigy >> "Results.txt" #Best child from generation with its parameters
+let GENERATIONS=$GENERATIONS+1 #Change generation
 
 done
